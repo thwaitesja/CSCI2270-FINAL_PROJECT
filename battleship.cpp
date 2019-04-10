@@ -56,4 +56,4 @@ class Battleship {
     PriorityQueue turn;
     ships** board;
     ships** ship;
-};
+};//trying comment
