@@ -17,6 +17,20 @@ int main(int argc, char* argv[]){
   cout<< "Enter the number of Players:";
   cin>>numb;
   Battleship game(numb);
-  game.showall();
+  area a;
+  int x,y;
+  while(x!=-1){
+    game.showall();
+    cout<<"x:";
+    cin>>x;
+    cout<<"y:";
+    cin>>y;
+    a.ic=x-1;
+    a.ec=x+1;
+    a.ir=y-1;
+    a.er=y+1;
+    game.attack(a);
+    game.attack(a);
+  }
   return 0;
 }

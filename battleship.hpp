@@ -11,21 +11,25 @@
 #include<string>
 #include<ctime>
 
+using namespace std;
+
+struct area{
+  int ir;
+  int ic;
+  int er;
+  int ec;
+//specifies area on the board by top left and bottom right corners
+};
+
 struct ships{
   int turnstatus;
   bool bship;
   int size;
   int strength;
   int player;
+  area location;
+  bool out;
 
-};
-
-struct area{
-  int ir;
-  int ic;
-  int or;
-  int oc;
-//specifies area on the board by top left and bottom right corners
 };
 
 
@@ -41,6 +45,7 @@ class PriorityQueue{
     void lowerpriority();
     private:
     //Purpose: maintain heap properties by swapping node with parent if necessary
+    void swap2(ships* &a, ships* &b);
     void repairUpward(int nodeIndex);
     void repairDownward(int nodeIndex);
 
@@ -58,24 +63,27 @@ class Battleship {
     ~Battleship();
     void showall();
     void printboard(area a);
-    void addship(ships *boat, area r);
+    //void addship(ships *boat, area r);
     void damage(ships *boat, int damage);
     void removeship(ships *boat);
     bool shipcollide(area r);
     int moveship(ships *boat, area iregion, area oregion );
     bool attack(area a);
-    void peek(area a);
-    ships* lookup();
+    //void peek(area a);
+    void stepday();
+    ships* lookup(int c, int r);
 
   private:
     /* member functions */
     void setboard();
     void setboat(area a, ships *boat);
+    void unsetboat(area a);
     void order(int order[]);
     void createboard(int segment);
     bool isEmptySegment(int segment);
+    bool isEmptyArray(int segment);
 
-    PriorityQueue turn;
+    PriorityQueue* turn;
     ships*** board;
     ships* ship;
     int playerNum;
