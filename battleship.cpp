@@ -34,6 +34,9 @@
       }
     Battleship::~Battleship(){
       delete [] ship;
+      for(int i=0; i<playerNum*scale; i++){
+        if(!isEmptySegment(i)) delete [] board[i];
+      }
       delete [] board;
       delete turn;
     }
@@ -73,7 +76,14 @@
           h=lookup(j, i);
           if(h!=0){
             h->strength--;
-            if(h->strength==0) removeship(h);
+            cout<<"Player"<<h->player<<"'s ";
+            if(h->bship)cout<<"battleship was hit";
+            else cout<<"aircraft carrier was hit";
+            if(h->strength<=0){
+              removeship(h);
+              cout<<" sunk!"<<endl;
+            }
+            else  cout<<" and has "<< h->strength<<" health left"<<endl;
           }
         }
       }
@@ -124,11 +134,13 @@
       boat->location=a;
     }
     void Battleship::unsetboat(area a){
-      for(int i=a.ir; i<=a.er; i++){
-        for(int j=a.ic; j<=a.ec; j++){
+    for(int i=a.ir; i!=(a.er+1)%((scale)*playerNum); i=(i+1)%((scale)*playerNum)){
+      for(int j=a.ic; j!=(a.ec+1)%((scale)*playerNum); j=(j+1)%((scale)*playerNum)){
           board[j][i]=0;
+
         }
       }
+      cout<<board[a.ic][ a.ir];
       for(int k=a.ic; k<=a.ec; k++){
         if(isEmptyArray(k)){
           delete [] board[k];
