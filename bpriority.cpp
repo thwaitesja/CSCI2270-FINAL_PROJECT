@@ -7,25 +7,21 @@
 
 using namespace std;
 
-void swap2(ships* &a, ships* &b){
-    ships c=a;
-    a=b;
-    b=c;
-  }
+        void swap2(ships* &a, ships* &b){
+            ships c=a;
+            a=b;
+            b=c;
+          }
 
-
-    class PriorityQueue
-    {
-        public:
-        PriorityQueue(int queueSize){
+        PriorityQueue::PriorityQueue(int queueSize){
                 priorityQueue= new ships*[queueSize];
                 maxQueueSize=queueSize;
                 currentQueueSize=0;
           }
-        ~PriorityQueue(){
+        PriorityQueue::~PriorityQueue(){
             delete [] priorityQueue;
         }
-        void enqueue (ships* a){
+        void PriorityQueue::enqueue (ships* a){
           if(isFull()){
             cout << "Heap full, cannot enqueue" << endl;
           }
@@ -35,7 +31,7 @@ void swap2(ships* &a, ships* &b){
             currentQueueSize++;
           }
         }
-        void dequeue(){
+        void PriorityQueue::dequeue(){
           if(isEmpty()){
             cout << "Heap empty, cannot dequeue" << endl;
           }
@@ -46,18 +42,22 @@ void swap2(ships* &a, ships* &b){
             repairDownward(0);
           }
         }
-        ships* peek(){
+        ships* PriorityQueue::peek(){
             return priorityQueue[0];
         }
-        bool isFull(){
+        bool PriorityQueue::isFull(){
           return currentQueueSize == maxQueueSize;
         }
-        bool isEmpty(){
+        bool PriorityQueue::isEmpty(){
           return currentQueueSize == 0;
         }
-        private:
-        //Purpose: maintain heap properties by swapping node with parent if necessary
-        void repairUpward(int nodeIndex){
+        void PriorityQueue::lowerpriority(){
+            for(int i=0; i<currentQueueSize; i++){
+              priorityQueue[i]->turnstatus--;
+            }
+        }
+
+        void PriorityQueue::repairUpward(int nodeIndex){
           int p=(nodeIndex-1)/2;
           if(p<0 || nodeIndex==0){
             return;
@@ -72,7 +72,7 @@ void swap2(ships* &a, ships* &b){
             }
           }
         }
-        void repairDownward(int nodeIndex)repairDownward(int nodeIndex){
+        void PriorityQueue::repairDownward(int nodeIndex){
           int c1=(nodeIndex*2)+1;
           int c2=(nodeIndex*2)+2;
           int sm=nodeIndex;
@@ -91,8 +91,3 @@ void swap2(ships* &a, ships* &b){
             repairDownward(sm);
           }
         }
-
-        GroupNode* priorityQueue; //pointer to the array used to implement priority queue
-        int currentQueueSize; //number of group currently in the priority queue
-        int maxQueueSize; //maximum capacity of priority queue
-    };
