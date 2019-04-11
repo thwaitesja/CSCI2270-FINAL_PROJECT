@@ -4,26 +4,29 @@
 
 
     Battleship::Battleship(int players){
-      srand (time(NULL));
+
+      srand(time(NULL));
       playerNum=players;
-      *turn=PriorityQueue(2*players);
+      turn= new PriorityQueue(2*players);
       int playerorder[players];
       order(playerorder);
       ship= new ships[2*players];
       for(int i=0; i<2*players; i++){
         if(i%2==0){
           ship[i].bship=1;
-          ship[i].size=8;
-          ship[i].player=(i+1)/2;
-          ship[i].strength=8;
+          ship[i].size=16;
+          ship[i].player=(i+2)/2;
+          ship[i].strength=16;
           ship[i].turnstatus=playerorder[(i+1)/2]*2+1;
+          ship[i].out=0;
         }
         else{
           ship[i].bship=0;
-          ship[i].size=10;
-          ship[i].player=(i+1)/2;
-          ship[i].strength=10;
+          ship[i].size=20;
+          ship[i].player=(i+2)/2;
+          ship[i].strength=20;
           ship[i].turnstatus=playerorder[(i+1)/2]*2;
+          ship[i].out=0;
         }
       }
       setboard();
@@ -32,18 +35,21 @@
     Battleship::~Battleship(){
       delete [] ship;
       delete [] board;
+      delete turn;
     }
     void Battleship::showall(){
-      area a;
-      a.ir=0;
-      a.ic=0;
-      a.er=scale*playerNum;
-      a.ec=scale*playerNum;
-      printboard(a);
+      for(int i=0; i<scale*playerNum; i++){
+        for(int j=0; j<scale*playerNum; j++){
+          if(board[j]==0) cout<<" *";
+          else if(board[j][i]==0) cout<<" *";
+          else cout<<" "<<board[j][i]->player;
+        }
+        cout<< endl;
+      }
     }
     void Battleship::printboard(area a){
-      for(int i=a.ir; i!=a.er+1; (i++)%(scale*playerNum)){
-        for(int j=a.ic; j!=a.ec+1; (j++)%(scale*playerNum)){
+      for(int i=a.ir; i!=(a.er+1)%(scale*playerNum); i=(i+1)%((scale)*playerNum)){
+        for(int j=a.ic; j!=(a.ec+1)%(scale*playerNum); j=(j+1)%((scale)*playerNum)){
           if(board[j]==0) cout<<"*";
           else if(board[j][i]==0) cout<<"*";
           else cout<<board[j][i]->player;
@@ -51,14 +57,35 @@
         cout<< endl;
       }
     }
-    void Battleship::addship(ships *boat, area r){}
+    //void Battleship::addship(ships *boat, area r){}
     void Battleship::damage(ships *boat, int damage){}
-    void Battleship::removeship(ships *boat){}
+    void Battleship::removeship(ships *boat){
+      boat->out=1;
+      unsetboat(boat->location);
+
+    }
     bool Battleship::shipcollide(area r){}
     int Battleship::moveship(ships *boat, area iregion, area oregion ){}
-    bool Battleship::attack(area a){}
-    void Battleship::peek(area a){}
-    ships* Battleship::lookup(){}
+    bool Battleship::attack(area a){
+      ships* h=0;
+      for(int i=a.ir; i<=a.er; i++){
+        for(int j=a.ic; j<=a.ec; j++){
+          h=lookup(j, i);
+          if(h!=0){
+            h->strength--;
+            if(h->strength==0) removeship(h);
+          }
+        }
+      }
+    }
+  //  void Battleship::peek(area a){}
+    void Battleship::stepday(){
+      turn->lowerpriority();
+    }
+    ships* Battleship::lookup(int c, int r){
+      if(isEmptySegment(c))return 0;
+      else return board[c][r];
+    }
     void Battleship::setboard(){
       board=new ships**[((14)*playerNum)];
       for(int i=0; i<((14)*playerNum);i++) board[i]=0;
@@ -70,27 +97,43 @@
         do{
           position=rand()%(2*playerNum);
         }while(taken[position]);
-        taken[position]=1;//randomly find each players horizontal position on the board
-        height=rand()%(14*playerNum);
+        taken[position]=1;
+        position=position*7;
+        //randomly find each players horizontal position on the board
+        height=rand()%((scale)*playerNum);
         boat.ir=height;
-        boat.ic=(position+2)%((14)*playerNum);
-        boat.er=((height+1-ship[2*k].size/2))%((14)*playerNum);
+        boat.ic=(position+2)%((scale)*playerNum);
+        boat.er=(height+7)%((scale)*playerNum);
         boat.ec=(position+1)%((14)*playerNum);
         setboat(boat, &ship[2*k]);
 
         boat.ir=height;
-        boat.ic=(((14)*playerNum) +position-2)%((14)*playerNum);
-        boat.er=((height+1-ship[2*k+1].size/2))%((14)*playerNum);
-        boat.ec=(((14)*playerNum) +position-1)%((14)*playerNum);
+        boat.ic=(((scale)*playerNum) +position-2)%((scale)*playerNum);
+        boat.er=(height+9)%((scale)*playerNum);
+        boat.ec=(((scale)*playerNum) +position-1)%((scale)*playerNum);
         setboat(boat, &ship[2*k+1]);
       }
     }
     void Battleship::setboat(area a, ships *boat){
-      createboard(a.ic);
-      createboard(a.ec);
-      for(int i=a.ir; i!=a.er+1; (i++)%((scale)*playerNum)){
+      if(isEmptySegment(a.ic))createboard(a.ic);
+      if(isEmptySegment(a.ec))createboard(a.ec);
+      for(int i=a.ir; i!=(a.er+1)%((scale)*playerNum); i=(i+1)%((scale)*playerNum)){
           board[a.ic][i]=boat;
-          board[a.ic][i]=boat;
+          board[a.ec][i]=boat;
+      }
+      boat->location=a;
+    }
+    void Battleship::unsetboat(area a){
+      for(int i=a.ir; i<=a.er; i++){
+        for(int j=a.ic; j<=a.ec; j++){
+          board[j][i]=0;
+        }
+      }
+      for(int k=a.ic; k<=a.ec; k++){
+        if(isEmptyArray(k)){
+          delete [] board[k];
+          board[k]=0;
+        }
       }
     }
     void Battleship::order(int order[]){
@@ -115,6 +158,13 @@
     }
     bool Battleship::isEmptySegment(int segment){
       return board[segment]==0;
+    }
+    bool Battleship::isEmptyArray(int segment){
+      bool empty=1;
+      for(int i=0; i<playerNum*scale ;i++){
+        if(board[segment][i]!=0) empty=0;
+      }
+      return empty;
     }
 
 
