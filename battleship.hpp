@@ -11,6 +11,8 @@
 #include<string>
 #include<ctime>
 
+using namespace std;
+
 struct ships{
   int turnstatus;
   bool bship;
@@ -23,8 +25,8 @@ struct ships{
 struct area{
   int ir;
   int ic;
-  int or;
-  int oc;
+  int er;
+  int ec;
 //specifies area on the board by top left and bottom right corners
 };
 
@@ -41,6 +43,7 @@ class PriorityQueue{
     void lowerpriority();
     private:
     //Purpose: maintain heap properties by swapping node with parent if necessary
+    void swap2(ships* &a, ships* &b);
     void repairUpward(int nodeIndex);
     void repairDownward(int nodeIndex);
 
@@ -75,7 +78,7 @@ class Battleship {
     void createboard(int segment);
     bool isEmptySegment(int segment);
 
-    PriorityQueue turn;
+    PriorityQueue* turn;
     ships*** board;
     ships* ship;
     int playerNum;
