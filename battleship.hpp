@@ -63,7 +63,8 @@ class Battleship {
     ~Battleship();
     void showall();
     void printboard(area a);
-    //void addship(ships *boat, area r);
+    ships* getship(int i){return &ship[i];}
+    void shipRelocation(int number, bool bship, int x, int y, bool orientation );
     void damage(ships *boat, int damage);
     void removeship(ships *boat);
     bool shipcollide(area r);
