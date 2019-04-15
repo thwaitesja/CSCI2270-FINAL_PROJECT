@@ -131,7 +131,19 @@
       unsetboat(boat->location);
 
     }
-    bool Battleship::shipcollide(area r){}
+    bool Battleship::shipcollide(area a){
+      bool sum=0;
+      ships* h;
+      for(int i=a.ir; i<=a.er; i++){
+        for(int j=a.ic; j<=a.ec; j++){
+          h=lookup(j, i);
+          if(h!=0){
+            sum=1;
+          }
+        }
+      }
+      return sum;
+    }
     bool Battleship::attack(area a){
       ships* h=0;
       for(int i=a.ir; i<=a.er; i++){
