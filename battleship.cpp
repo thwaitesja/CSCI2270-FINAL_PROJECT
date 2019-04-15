@@ -44,7 +44,7 @@
       delete turn;
     }
 
-
+  //  void Battleship::peek(area a){}
     bool Battleship::nexturn(){
       ships* p = turn->peek();
       int mode, x, y;
@@ -126,7 +126,6 @@
       }
     }
     //void Battleship::addship(ships *boat, area r){}
-    void Battleship::damage(ships *boat, int damage){}
     void Battleship::removeship(ships *boat){
       boat->out=1;
       unsetboat(boat->location);
@@ -152,7 +151,6 @@
         }
       }
     }
-  //  void Battleship::peek(area a){}
     void Battleship::stepday(){
       int count=0;
       while(turn->peek()->turnstatus!=0){
@@ -235,15 +233,18 @@
       }
 
     }
+    //generates random order
     void Battleship::createboard(int segment){
         if(isEmptySegment(segment)){
             board[segment]=new ships*[((14)*playerNum)];
             for(int i=0; i<((14)*playerNum);i++) board[segment][i]=0;
         }
     }
+    //called to generate board
     bool Battleship::isEmptySegment(int segment){
       return board[segment]==0;
     }
+     //checks if the pointer to an array is null
     bool Battleship::isEmptyArray(int segment){
       bool empty=1;
       for(int i=0; i<playerNum*scale ;i++){
@@ -251,6 +252,7 @@
       }
       return empty;
     }
+    //checks if an array is empty
     void Battleship::shipRelocation(int number, bool bship, int x, int y, bool orientation ){
       area a;
       ships* ship;
@@ -283,6 +285,7 @@
       unsetboat(ship->location);
       setboat(a, ship);
     }
+    //looks up a ship and moves it based on specifications
 //_______________________________________________________________________________________________
 
 
