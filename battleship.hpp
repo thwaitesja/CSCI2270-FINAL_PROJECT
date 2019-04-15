@@ -10,6 +10,7 @@
 #include<sstream>
 #include<string>
 #include<ctime>
+#include<cmath>
 
 using namespace std;
 
@@ -69,7 +70,6 @@ class Battleship {
     void damage(ships *boat, int damage);
     void removeship(ships *boat);
     bool shipcollide(area r);
-    int moveship(ships *boat, area iregion, area oregion );
     bool attack(area a);
     //void peek(area a);
     void stepday();

@@ -17,7 +17,7 @@
           ship[i].size=16;
           ship[i].player=(i+2)/2;
           ship[i].strength=16;
-          ship[i].turnstatus=playerorder[(i+1)/2]*2+1;
+          ship[i].turnstatus=playerorder[(i)/2]*2+1;
           ship[i].out=0;
           turn->enqueue(&ship[i]);
         }
@@ -26,7 +26,7 @@
           ship[i].size=20;
           ship[i].player=(i+2)/2;
           ship[i].strength=20;
-          ship[i].turnstatus=playerorder[(i+1)/2]*2;
+          ship[i].turnstatus=playerorder[(i)/2]*2;
           ship[i].out=0;
           turn->enqueue(&ship[i]);
         }
@@ -80,9 +80,9 @@
         attack(a);
         attack(a);
         attack(a);
+        p->turnstatus=40;
         break;
         case 2:
-
         cout<<"top left point x";
         cin>>x;
         cout<<"top left point y";
@@ -90,12 +90,12 @@
         cout<<"vertical 1, horizontal 0";
         cin>>orientation;
         shipRelocation(p->player, p->bship,  x, y, orientation);
+        p->turnstatus=80;
         break;
         case 3:
         quit=0;
         break;
       }
-      p->turnstatus=100;
       turn->enqueue(p);
       stepday();
       return quit;
@@ -133,9 +133,6 @@
 
     }
     bool Battleship::shipcollide(area r){}
-    int Battleship::moveship(ships *boat, area iregion, area oregion ){
-
-    }
     bool Battleship::attack(area a){
       ships* h=0;
       for(int i=a.ir; i<=a.er; i++){
@@ -157,7 +154,12 @@
     }
   //  void Battleship::peek(area a){}
     void Battleship::stepday(){
-      turn->lowerpriority();
+      int count=0;
+      while(turn->peek()->turnstatus!=0){
+          turn->lowerpriority();
+          count++;
+      }
+      cout<<count<<" hours have passed"<< endl;
     }
     ships* Battleship::lookup(int c, int r){
       if(isEmptySegment(c))return 0;
@@ -314,6 +316,9 @@
       }
     }
     ships* PriorityQueue::peek(){
+        while(priorityQueue[0]->out){
+          dequeue();
+        }
         return priorityQueue[0];
     }
     bool PriorityQueue::isFull(){
