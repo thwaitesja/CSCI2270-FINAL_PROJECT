@@ -19,6 +19,7 @@
           ship[i].strength=16;
           ship[i].turnstatus=playerorder[(i+1)/2]*2+1;
           ship[i].out=0;
+          turn->enqueue(&ship[i]);
         }
         else{
           ship[i].bship=0;
@@ -27,7 +28,9 @@
           ship[i].strength=20;
           ship[i].turnstatus=playerorder[(i+1)/2]*2;
           ship[i].out=0;
+          turn->enqueue(&ship[i]);
         }
+
       }
       setboard();
 
@@ -39,6 +42,63 @@
       }
       delete [] board;
       delete turn;
+    }
+
+
+    bool Battleship::nexturn(){
+      ships* p = turn->peek();
+      int mode, x, y;
+      area a;
+      bool orientation, quit=1;
+      turn->dequeue();
+      showall();
+      cout<<"_________________________________________________"<<endl;
+      cout<<"Player"<<p->player<<"'s ";
+      if(p->bship)cout<<"battleship's turn";
+      else cout<<"aircraft carrier's turn";
+      cout<<endl<<"attack:1"<<endl;
+      cout<<"move ship:2"<<endl;
+      cout<<"quit: 3"<<endl;
+      cin>>mode;
+      switch(mode){
+        case 1:
+        cout<<"x:";
+        cin>>x;
+        cout<<"y:";
+        cin>>y;
+        a.ic=x;
+        a.ec=x;
+        a.ir=y;
+        a.er=y;
+        attack(a);
+        attack(a);
+        attack(a);
+        attack(a);
+        attack(a);
+        attack(a);
+        attack(a);
+        attack(a);
+        attack(a);
+        attack(a);
+        break;
+        case 2:
+
+        cout<<"top left point x";
+        cin>>x;
+        cout<<"top left point y";
+        cin>>y;
+        cout<<"vertical 1, horizontal 0";
+        cin>>orientation;
+        shipRelocation(p->player, p->bship,  x, y, orientation);
+        break;
+        case 3:
+        quit=0;
+        break;
+      }
+      p->turnstatus=100;
+      turn->enqueue(p);
+      stepday();
+      return quit;
     }
     void Battleship::showall(){
       cout<<"  ";
@@ -165,7 +225,7 @@
       }
       for(int j=0; j<playerNum; j++){
         while(order[j]==-1){
-          order[j]=rand()%playerNum;
+          order[j]=rand()%(playerNum);
           for(int k=0; k<j; k++){
             if(order[j]==order[k]) order[j]=-1;
           }
@@ -221,7 +281,7 @@
       unsetboat(ship->location);
       setboat(a, ship);
     }
-
+//_______________________________________________________________________________________________
 
 
     PriorityQueue::PriorityQueue(int queueSize){

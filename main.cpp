@@ -21,6 +21,7 @@ int main(int argc, char* argv[]){
   int x,y,mode, n;
   bool quit=1, orientation, bship;
   while(quit){
+    /*
     game.showall();
     cout<<"_________________________________________________"<<endl;
     cout<<"attack:1"<<endl;
@@ -63,8 +64,9 @@ int main(int argc, char* argv[]){
       break;
       case 3:
       quit=0;
-      break;
-    }
+      break;*/
+      quit=game.nexturn();
+    //}
 
   }
   return 0;

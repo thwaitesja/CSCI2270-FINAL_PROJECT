@@ -61,6 +61,7 @@ class Battleship {
   public:
     Battleship(int players);
     ~Battleship();
+    bool nexturn();
     void showall();
     void printboard(area a);
     ships* getship(int i){return &ship[i];}
