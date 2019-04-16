@@ -70,7 +70,6 @@ class Battleship {
     void removeship(ships *boat);
     bool shipcollide(area a);
     bool attack(area a);
-    //void peek(area a);
     void stepday();
     ships* lookup(int c, int r);
 

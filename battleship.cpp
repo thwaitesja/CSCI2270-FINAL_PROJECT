@@ -35,6 +35,7 @@
       setboard();
 
       }
+      //battleship destructor
     Battleship::~Battleship(){
       delete [] ship;
       for(int i=0; i<playerNum*scale; i++){
@@ -43,8 +44,7 @@
       delete [] board;
       delete turn;
     }
-
-  //  void Battleship::peek(area a){}
+    //battleship constructor
     bool Battleship::nexturn(){
       ships* p = turn->peek();
       int mode, x, y;
@@ -100,6 +100,7 @@
       stepday();
       return quit;
     }
+    //iterates through one turn
     void Battleship::showall(){
       cout<<"  ";
       for(int k=0; k<scale*playerNum; k++) cout<<" "<<k%10;
@@ -114,6 +115,7 @@
         cout<< endl;
       }
     }
+    //shows the entire board for demo and debugging
     void Battleship::printboard(area a){
 
       for(int i=a.ir; i!=(a.er+1)%(scale*playerNum); i=(i+1)%((scale)*playerNum)){
@@ -125,12 +127,13 @@
         cout<< endl;
       }
     }
-    //void Battleship::addship(ships *boat, area r){}
+    //prints the specified area
     void Battleship::removeship(ships *boat){
       boat->out=1;
       unsetboat(boat->location);
 
     }
+    //unsets the ship being pointed to
     bool Battleship::shipcollide(area a){
       bool sum=0;
       ships* h;
@@ -144,6 +147,7 @@
       }
       return sum;
     }
+    //states if a ship is in the area specified
     bool Battleship::attack(area a){
       ships* h=0;
       for(int i=a.ir; i<=a.er; i++){
@@ -163,6 +167,7 @@
         }
       }
     }
+    //attacks an area and deducts 1 health to every pointer in the area
     void Battleship::stepday(){
       int count=0;
       while(turn->peek()->turnstatus!=0){
@@ -171,10 +176,12 @@
       }
       cout<<count<<" hours have passed"<< endl;
     }
+    //calls priorityQueue.lowerpriority() until the front node is at 0
     ships* Battleship::lookup(int c, int r){
       if(isEmptySegment(c))return 0;
       else return board[c][r];
     }
+    //returns the pointer at a specified location on the hash table
     void Battleship::setboard(){
       board=new ships**[((14)*playerNum)];
       for(int i=0; i<((14)*playerNum);i++) board[i]=0;
@@ -203,6 +210,7 @@
         setboat(boat, &ship[2*k+1]);
       }
     }
+    //randomly sets up the board
     void Battleship::setboat(area a, ships *boat){
 
     //  cout<< "hi";
@@ -216,6 +224,7 @@
       }
       boat->location=a;
     }
+    //puts the boat back on the board in an area
     void Battleship::unsetboat(area a){
     for(int i=a.ir; i!=(a.er+1)%((scale)*playerNum); i=(i+1)%((scale)*playerNum)){
       for(int j=a.ic; j!=(a.ec+1)%((scale)*playerNum); j=(j+1)%((scale)*playerNum)){
@@ -231,6 +240,7 @@
         }
       }
     }
+    //removes boat from specified area
     void Battleship::order(int order[]){
       for(int i=0; i<playerNum; i++){
         order[i]=-1;
