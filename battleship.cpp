@@ -131,8 +131,8 @@
       for(int i=0; i<scale*playerNum; i++){
         cout<<i/10<< i%10<<" ";
         for(int j=0; j<scale*playerNum; j++){
-          if(board[j]==0) cout<<" *";
-          else if(board[j][i]==0) cout<<" *";
+          if(board[j]==0) cout<<"  ";
+          else if(board[j][i]==0) cout<<"  ";
           else cout<<" "<<board[j][i]->player;
         }
         cout<< endl;
