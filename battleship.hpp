@@ -25,7 +25,6 @@ struct area{
 struct ships{
   int turnstatus;
   bool bship;
-  //int size;
   int strength;
   int player;
   area location;
@@ -67,7 +66,7 @@ class Battleship {
     ships* topship();
     bool nexturn();
     void showall();
-    void printboard(area a);
+    void printboard(ships* boat);
     ships* getship(int i){return &ship[i];}
     void shipRelocation(int number, bool bship, int x, int y, bool orientation );
     void removeship(ships *boat);

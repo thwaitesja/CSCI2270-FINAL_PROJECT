@@ -14,7 +14,6 @@
       for(int i=0; i<2*players; i++){
         if(i%2==0){
           ship[i].bship=1;
-          //ship[i].size=16;
           ship[i].player=(i+2)/2;
           ship[i].strength=16;
           ship[i].turnstatus=playerorder[(i)/2]*2+1;
@@ -24,7 +23,6 @@
         }
         else{
           ship[i].bship=0;
-          //ship[i].size=20;
           ship[i].player=(i+2)/2;
           ship[i].strength=20;
           ship[i].turnstatus=playerorder[(i)/2]*2;
@@ -74,10 +72,10 @@
         case 0:
         break;
         case 1:
-        a.ic=p->action[1];
-        a.ec=(p->action[1]+2)%(scale);
-        a.ir=p->action[2];
-        a.er=(p->action[2]+2)%(scale);
+        a.ic=(p->action[1]+scale-1)%(scale);
+        a.ec=(p->action[1]+1)%(scale);
+        a.ir=(p->action[2]+scale-1)%(scale);
+        a.er=(p->action[2]+1)%(scale);
 
         attack(a);
         attack(a);
@@ -97,35 +95,44 @@
       turn->dequeue();
 
 
-
-        showall();
-        cout<<"_________________________________________________"<<endl;
-        cout<<endl<<"attack: Delay = 9*(rows+collumns) press 1"<<endl;
+        printboard(p);
+      //  showall();//shows the whole structure
+        cout<<"___________________________________________________"<<endl;
+        cout<< "O is current ship, o is your 2nd ship, ? is unknown enemy"<< endl;
+        cout<<endl<<"attack 3x3 area: Delay = 9*(rows+collumns) press 1"<<endl;
         cout<<"move ship: Delay = size*(rows+collumns) press 2"<<endl;
         cout<<"quit: press 3"<<endl;
         cin>>mode;
         p->action[0]=mode;
         switch(mode){
           case 0:
+          p->turnstatus=1000;
           break;
           case 1:
-          cout<<"x left:";
-          cin>>p->action[1];
-          cout<<"y top:";
-          cin>>p->action[2];
-          //if(abs(p->action[1]-p->location.ic))
-          p->turnstatus=60;//(abs(p->action[1]-)+abs(p->action[2]-))*9;
+          cout<< "center point"<<endl;
+          cout<<"x:";
+          cin>>x;
+          p->action[1]=(p->location.ic+scale+x)%scale;
+          cout<<"y:";
+          cin>>y;
+          p->action[2]=(p->location.ir+scale+y)%scale;
+
+          p->turnstatus=(abs(x)+abs(y))*9;
           break;
           case 2:
-          cout<<"top left point x";
-          cin>>p->action[1];
-          cout<<"top left point y";
-          cin>>p->action[2];
-          cout<<"vertical 1, horizontal 0";
+          cout<< "Enter top left x, y coordinate, then the orientation of the ship"<<endl;
+          cout<<" If the place of movement is/ becomes blocked, the move won't happen"<<endl;
+          cout<<"top left x value: ";
+          cin>>x;
+          p->action[1]=(p->location.ic+scale+x)%scale;
+          cout<<"top left y value: ";
+          cin>>y;
+          p->action[2]=(p->location.ir+scale+y)%scale;
+          cout<<"vertical type 1, horizontal type 0: ";
           cin>>p->action[3];
           p->action[3]=p->action[3]%2;//ensures a 1 or 0
-          if(p->bship) p->turnstatus=80;//(abs(p->action[1]-)+abs(p->action[2]-))*20;
-          else p->turnstatus=100;//(abs(p->action[1]-)+abs(p->action[2]-))*16;
+          if(p->bship) p->turnstatus=(abs(x)+abs(y))*16;
+          else p->turnstatus=(abs(x)+abs(y))*20;
 
           break;
           case 3:
@@ -154,13 +161,41 @@
       }
     }
     //shows the entire board for demo and debugging
-    void Battleship::printboard(area a){
+    void Battleship::printboard(ships* boat){
+      int x=boat->location.ic;
+      int y=boat->location.ir;
+      int xstart=(scale/2+x)%scale;
+      int ystart=(scale/2+y)%scale;
 
-      for(int i=a.ir; i!=(a.er+1)%(scale); i=(i+1)%scale){
-        for(int j=a.ic; j!=(a.ec+1)%(scale); j=(j+1)%scale){
-          if(board[j]==0) cout<<"*";
-          else if(board[j][i]==0) cout<<"*";
-          else cout<<board[j][i]->player;
+      cout<<"    ";
+      for(int k=-scale/2; k<scale/2; k++){
+        if(k<0)cout<<" -";
+        else cout<<"  ";
+      }
+      cout<< endl<<"    ";
+      for(int k=-scale/2; k<scale/2; k++){
+        if(k<0)cout<<" "<<-k/10;
+        else cout<<" "<<k/10;
+      }
+      cout<< endl<<"    ";
+      for(int k=-scale/2; k<scale/2; k++){
+        if(k<0)cout<<" "<< -k%10;
+        else cout<<" "<< k%10;
+      }
+      cout<< endl;
+
+      for(int i=0; i<scale; i++){//this is printing the y coordinates
+        int shiftedi= i-scale/2;
+        int newi= (i+ystart)%scale;
+        if(shiftedi<0)cout<<"-"<<-shiftedi/10<< -shiftedi%10<<" ";
+        else cout<<" "<<shiftedi/10<< shiftedi%10<<" ";
+        for(int j=0; j<scale; j++){//this is printing the x coordinates
+          int newj= (j+xstart)%scale;
+          if(board[newj]==0) cout<<"  ";
+          else if(board[newj][newi]==0) cout<<"  ";
+          else if(board[newj][newi]==boat) cout<<"O"<<"O";
+          else if(board[newj][newi]->player==boat->player) cout<<" "<<"o";
+          else cout<<" "<<"?";
         }
         cout<< endl;
       }
@@ -343,9 +378,10 @@
       }
       ship=getship(i);
       unsetboat(ship->location);
-      setboat(a, ship);
+      if(!shipcollide(a)) setboat(a, ship);
+      else setboat(ship->location, ship);
     }
-    //looks up a ship and moves it based on specifications
+    //looks up a ship and moves it based on specifications and if there is no collision
 //_______________________________________________________________________________________________
 
 
