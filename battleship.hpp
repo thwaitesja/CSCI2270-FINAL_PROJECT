@@ -90,7 +90,7 @@ class Battleship {
     ships*** board;
     ships* ship;
     int playerNum;
-    const int scale=14;
+    int scale;
 };
 
 
