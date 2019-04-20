@@ -25,11 +25,12 @@ struct area{
 struct ships{
   int turnstatus;
   bool bship;
-  int size;
+  //int size;
   int strength;
   int player;
   area location;
   bool out;
+  int action[4];//[type of acion, x coordinate, y coordinate, orientation]
 
 };
 
@@ -38,6 +39,7 @@ class PriorityQueue{
     public:
     PriorityQueue(int queueSize);
     ~PriorityQueue();
+    bool oneplayer();
     void enqueue (ships* a);
     void dequeue();
     ships* peek();
@@ -62,6 +64,7 @@ class Battleship {
   public:
     Battleship(int players);
     ~Battleship();
+    ships* topship();
     bool nexturn();
     void showall();
     void printboard(area a);
