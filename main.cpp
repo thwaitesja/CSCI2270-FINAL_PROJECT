@@ -14,7 +14,7 @@ using namespace std;
 
 int main(int argc, char* argv[]){
   cout << endl;
-  cout << "   ~WELCOME TO BATTLEFIELD ROYALE~   " << endl;
+  cout << "   ~WELCOME TO BATTLESHIP ROYALE~   " << endl;
   cout << endl;
   int numb;
   cout<< "Enter the number of Players:";
