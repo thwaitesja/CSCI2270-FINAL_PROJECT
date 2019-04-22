@@ -10,6 +10,7 @@
 #include<sstream>
 #include<string>
 #include<ctime>
+#include<cmath>
 
 using namespace std;
 
@@ -24,11 +25,11 @@ struct area{
 struct ships{
   int turnstatus;
   bool bship;
-  int size;
   int strength;
   int player;
   area location;
   bool out;
+  int action[4];//[type of acion, x coordinate, y coordinate, orientation]
 
 };
 
@@ -37,6 +38,7 @@ class PriorityQueue{
     public:
     PriorityQueue(int queueSize);
     ~PriorityQueue();
+    bool oneplayer();
     void enqueue (ships* a);
     void dequeue();
     ships* peek();
@@ -61,15 +63,15 @@ class Battleship {
   public:
     Battleship(int players);
     ~Battleship();
+    ships* topship();
+    bool nexturn();
     void showall();
-    void printboard(area a);
-    //void addship(ships *boat, area r);
-    void damage(ships *boat, int damage);
+    void printboard(ships* boat);
+    ships* getship(int i){return &ship[i];}
+    void shipRelocation(int number, bool bship, int x, int y, bool orientation );
     void removeship(ships *boat);
-    bool shipcollide(area r);
-    int moveship(ships *boat, area iregion, area oregion );
+    bool shipcollide(area a);
     bool attack(area a);
-    //void peek(area a);
     void stepday();
     ships* lookup(int c, int r);
 
@@ -87,7 +89,7 @@ class Battleship {
     ships*** board;
     ships* ship;
     int playerNum;
-    const int scale=14;
+    int scale;
 };
 
 
