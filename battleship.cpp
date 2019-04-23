@@ -76,8 +76,7 @@
 
           attack(a);
           attack(a);
-          attack(a);
-          attack(a);
+          // each shot deals 2 points worth of damage to opponent
         break;
         case 2:
           shipRelocation(p->player, p->bship,  p->action[1], p->action[2], p->action[3]);
@@ -119,6 +118,7 @@
             p->action[2]=(p->location.ir+scale+y)%scale;
             p->turnstatus=(abs(x)+abs(y))*9;
             //sets up the attack and then computes the wait time
+            cout<< "Estimated time until action is completed: " << p->turnstatus <<" hours"<< endl;
           break;
           case 2:
             cout<< "Enter top left x, y coordinate, then the orientation of the ship"<<endl;
@@ -135,6 +135,7 @@
             if(p->bship) p->turnstatus=(abs(x)+abs(y))*16;
             else p->turnstatus=(abs(x)+abs(y))*20;
             //sets up for moving then sets delay
+            cout<< "Estimated time until action is completed: " << p->turnstatus <<" hours"<< endl;
           break;
           case 3:
             quit=0;
